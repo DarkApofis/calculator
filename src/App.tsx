@@ -1,7 +1,6 @@
 import { ThemeProvider } from "styled-components"
-import React, { ReactEventHandler, SyntheticEvent, useEffect, useReducer } from "react"
+import { useReducer } from "react"
 
-import Button from "./components/Buttons"
 import { primaryTheme } from "./styles/themes"
 import { 
   Main, 
