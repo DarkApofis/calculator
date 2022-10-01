@@ -27,11 +27,13 @@ type CalcAction = {
 }
 
 type CalcState = {
-  currValue: string
+  currValue: string,
+  operation: string,
 }
 
 const initialState = {
   currValue: '',
+  operation: ''
 }
 
 function reducer(state: CalcState, action: CalcAction) {
@@ -40,20 +42,23 @@ function reducer(state: CalcState, action: CalcAction) {
     case CalcActionKind.ADD_NUMBER:
       if(!state.currValue){
         return {
+          ...state,
           currValue: action.payload
         }
       } else {
         return {
+          ...state,
           currValue: state.currValue + action.payload
         }
       }
 
     case CalcActionKind.OPERATOR:
-      if(state.currValue.length < 0){
+      if(state.currValue.length <= 0){
         return state
       }
       if(!['+', '-', '/', '*'].includes(state.currValue[state.currValue.length - 1])){
         return {
+          ...state,
           currValue: `${state.currValue}${action.payload}`
         }
       } else {
@@ -63,20 +68,24 @@ function reducer(state: CalcState, action: CalcAction) {
     case CalcActionKind.DELETE:
       if(state.currValue.length <= 1){
         return {
+          ...state,
           currValue: ''
         }
       } else {
         return {
+          ...state,
           currValue: state.currValue.slice(0, -1)
         }
       }
       
     case CalcActionKind.RESET:
       return {
+        ...state,
         currValue: ''
       }
     case CalcActionKind.EVALUATE:
       return {
+        ...state,
         currValue: eval(state.currValue).toString()
       }
     default:
