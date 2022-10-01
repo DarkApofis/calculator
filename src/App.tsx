@@ -28,64 +28,56 @@ type CalcAction = {
 
 type CalcState = {
   currValue: string,
-  operation: string,
 }
 
 const initialState = {
   currValue: '',
-  operation: ''
 }
 
 function reducer(state: CalcState, action: CalcAction) {
+  const ops = ['+', '-', '/', '*', '.']
   switch (action.type) {
 
     case CalcActionKind.ADD_NUMBER:
       if(!state.currValue){
         return {
-          ...state,
           currValue: action.payload
         }
       } else {
         return {
-          ...state,
           currValue: state.currValue + action.payload
         }
       }
 
     case CalcActionKind.OPERATOR:
-      if(state.currValue.length <= 0){
-        return state
+      if(
+        ops.includes(action.payload || '') && state.currValue === '' ||
+        ops.includes(action.payload || '') && ops.includes(state.currValue.slice(-1))
+        ){
+         return state
       }
-      if(!['+', '-', '/', '*'].includes(state.currValue[state.currValue.length - 1])){
-        return {
-          ...state,
-          currValue: `${state.currValue}${action.payload}`
-        }
-      } else {
-        return state
+
+      return {
+        currValue: state.currValue + action.payload
       }
     
     case CalcActionKind.DELETE:
       if(state.currValue.length <= 1){
         return {
-          ...state,
           currValue: ''
         }
       } else {
         return {
-          ...state,
           currValue: state.currValue.slice(0, -1)
         }
       }
       
     case CalcActionKind.RESET:
       return {
-        ...state,
         currValue: ''
       }
     case CalcActionKind.EVALUATE:
       return {
-        ...state,
         currValue: eval(state.currValue).toString()
       }
     default:
@@ -104,7 +96,7 @@ function App() {
           <ScreenInfo>{state.currValue}</ScreenInfo>
         </Screen>
         <ButtonsContainer>
-          <button onClick={() => dispatch({type: CalcActionKind.ADD_NUMBER, payload: '7'})}>1</button>
+          <button onClick={() => dispatch({type: CalcActionKind.ADD_NUMBER, payload: '7'})}>7</button>
           <button onClick={() => dispatch({type: CalcActionKind.ADD_NUMBER, payload: '8'})}>8</button>
           <button onClick={() => dispatch({type: CalcActionKind.ADD_NUMBER, payload: '9'})}>9</button>
           <DeleteButton onClick={() => dispatch({type: CalcActionKind.DELETE})}>DEL</DeleteButton>
@@ -116,7 +108,7 @@ function App() {
           <button onClick={() => dispatch({type: CalcActionKind.ADD_NUMBER, payload: '2'})}>2</button>
           <button onClick={() => dispatch({type: CalcActionKind.ADD_NUMBER, payload: '3'})}>3</button>
           <button onClick={() => dispatch({type: CalcActionKind.OPERATOR, payload: '-'})}>-</button>
-          <button onClick={() => dispatch({type: CalcActionKind.ADD_NUMBER, payload: '.'})}>.</button>
+          <button onClick={() => dispatch({type: CalcActionKind.OPERATOR, payload: '.'})}>.</button>
           <button onClick={() => dispatch({type: CalcActionKind.ADD_NUMBER, payload: '0'})}>0</button>
           <button onClick={() => dispatch({type: CalcActionKind.OPERATOR, payload: '/'})}>/</button>
           <button onClick={() => dispatch({type: CalcActionKind.OPERATOR, payload: '*'})}>x</button>
